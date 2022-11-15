@@ -1,0 +1,26 @@
+<!-- layout is similar to partials ..it is the design you want your page to look like..
+you download the layout by ->npm install express-ejs-layout and then require and use in the index.js(express)
+the layout structure is a wrapper to the dynamic body part which is alwayd different but the layout remains same 
+it uses the partial files to create the whole wrapper-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/layout.css">
+    <!-- it renders the style from the particular page like profile etc from body to head -->
+    <%- style %>
+    <!-- <title>
+        <%= title %>
+    </title> -->
+</head>
+<body>
+    <%- include('_header'); %>
+
+    <%- body %>
+    
+    <%- include('_footer'); %>
+    <%- script %>
+</body>
+</html>
