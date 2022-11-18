@@ -1,11 +1,19 @@
 // install express and then require it
 const express = require('express');
+const cookieParser = require('cookie-parser')//npm install cookie-parser then require it
 const app = express();
 const port = 8000;
 // npm install express-ejs-layouts
 // require ejs-layouts before routes as the routes are going to need the layouts to display
 const expresslayouts = require('express-ejs-layouts');
+const db = require('./config/mongoose')
+//middlewares
+app.use(express.urlencoded({extended: true}));//to read the post requests
+
+app.use(cookieParser());//now tell the middleware to use the cookie parser
+
 app.use(expresslayouts);
+
 
 app.use(express.static('./assets'));
 
