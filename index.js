@@ -9,14 +9,35 @@ const expresslayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose')
 
 //npm install express-session-->which stores the session details from passport authentication
-const session = require('express-session');//used for session cookie
+const session = require('express-session'); //used for session cookie
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy')//requiringg the passport authentication code file
+//npm install passport-jwt
+const passportJWT = require('./config/passport-jwt-strategy');
+//npm install passport-google-oauth
+const passportGoogle = require('./config/passport-google-oauth2-strategy');
+
 //npm install connect-mongo..and then require
 const MongoStore = require('connect-mongo')//unlike other libraries this requires a argument(the express session-bcz we need to store the session info in the database)
 //mongo store is used to store the sessions cookie in the db
+//npm install node-sass-middleware
+const sassMiddleware = require('node-sass-middleware');
+//npm install connect-flash(for flash msgs)
+const flash = require('connect-flash')//after requiring set it up to be used after express session passport session
+const customMware = require('./config/middleware');
+
+
+
 
 //middlewares
+app.use(sassMiddleware({
+    src: './assets/scss', //this src is from where you will pick scss file to convert to css
+    dest: './assets/css', //this is where i need to put the css files
+    debug: true,//if i want to display the err..false would be used during production
+    outputStyle: 'extended',//want it in single line or multiple lines
+    prefix: '/css' //where should it look
+}));
+
 app.use(express.urlencoded({extended: true}));//to read the post requests
 
 app.use(cookieParser());//now tell the middleware to use the cookie parser
@@ -24,6 +45,8 @@ app.use(cookieParser());//now tell the middleware to use the cookie parser
 app.use(expresslayouts);
 
 app.use(express.static('./assets'));
+//make the uploads path available to the browser
+app.use('/uploads',express.static(__dirname + '/uploads'));
 
 // extract styles and scripts from sub pages into the layout
 app.set('layout extractStyles',true);
@@ -60,6 +83,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(passport.setAuthenticatedUser);//from passport-local-strategy file<-config//this function gets called automatically as a middleware
+
+app.use(flash());//this uses session cookies cause it will store the flash msgs in the cookie which stores session
+app.use(customMware.setFlash);//now include this to the ejs file in layout.ejs
+
 // use express router
 app.use('/',require('./routes'));
 

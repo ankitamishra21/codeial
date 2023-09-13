@@ -5,22 +5,60 @@ it uses the partial files to create the whole wrapper-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+    <!-- including jquery below noty as it doesny use jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <%- style %> <!-- this tells to add all the styles/style tags here -->
+
+
     <link rel="stylesheet" href="/css/layout.css">
+    <!-- to include the scss style mention the href to css and it will create a css file from the scss file -->
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
     <!-- it renders the style from the particular page like profile etc from body to head -->
-    <%- style %>
     <!-- <title>
-        <%= title %>
+        <%= title %> //rendering the title directly through ejs syntax
     </title> -->
 </head>
 <body>
     <%- include('_header'); %>
+    <!-- display the flash msgs -->
+    <!-- <% if(flash.success && flash.success.length > 0){ %>
+        <h5>
+            <%= flash.success %>
+        </h5>
+    <% } %> use this inside noty layout -->
 
-    <%- body %>
-    
+    <main id = 'layout-main'>
+        <%- body %> <!-- this tells to add all the things teh controller does to display here -->
+    </main>
     <%- include('_footer'); %>
-    <%- script %>
+    <%- script %> <!-- this tells to add all the scripts/script tags in layout -->
+    <!-- including noty layout which gives the looks to the flash msgs -->
+    <script>
+        <% if(flash.success && flash.success.length > 0){ %>
+            new Noty({
+                theme: 'relax',
+                text: '<%= flash.success %>',//msgs you want to show
+                type: 'success', //success gives green background
+                layout: 'topRight', //layout is where you want to display 
+                timeout: 1500 //how many ms you want it to last
+            }).show();
+        <% } %>
+        <% if(flash.error && flash.error.length > 0){ %>
+            new Noty({
+                theme: 'relax',
+                text: '<%= flash.error %>',
+                type: 'error',
+                layout: 'topRight',
+                timeout: 1500
+            }).show();
+        <% } %>
+    </script>
 </body>
 </html>

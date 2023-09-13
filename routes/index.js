@@ -1,3 +1,4 @@
+
 //the routes folder includes the different  routes or pages the website has an redirects to other routes
 // main route to handle the other routes
 const express = require('express');//creates another instance of express doesnt take a new space
@@ -14,7 +15,12 @@ router.use('/users',require('./users'));
 
 router.use('/posts',require('./posts'));
 
+router.use('/comments',require('./comments'));
 
+router.use('/likes', require('./likes'));
 
+router.use('/api',require('./api'));
 
+//for any further routes access from here
+//router.use('/routerName',require(./routerfile));
 module.exports = router;

@@ -4,7 +4,8 @@ const router = express.Router();
 const passport = require('passport');
 const usersController = require('../controllers/users_controller');//reruire the particular controller file in the corresponding route
 
-router.get('/profile',passport.checkAuthentication,usersController.profile);//we put checkAuthentication here bcz we want to redirect the user to the profile page if the user is authenticated
+router.get('/profile/:id',passport.checkAuthentication,usersController.profile);//we put checkAuthentication here bcz we want to redirect the user to the profile page if the user is authenticated
+router.post('/update/:id',passport.checkAuthentication,usersController.update); 
 
 router.get('/sign-in',usersController.signIn);//get the action for the particular routes from controller
 
@@ -19,5 +20,10 @@ router.post('/create-session', passport.authenticate(
 ),usersController.createSession);//can take 3 arguments
 
 router.get('/sign-out',usersController.destroySession);
+
+
+router.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+router.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/users/sign-in'}), usersController.createSession);
+
 
 module.exports = router;

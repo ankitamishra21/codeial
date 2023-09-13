@@ -7,17 +7,20 @@ const User = require('../models/user');
 
 //authentication using passport
 passport.use(new LocalStrategy({//telling passport to use th elocal strategy
-    usernameField : 'email'//email from the schema
-    },
-    function(email,password,done){//uses 3 arguments..done is a callback function which reports back to passport(can call it anything) 
+    usernameField : 'email',//email from the schema    
+    passReqToCallback: true
+},
+    function(req,email,password,done){//uses 3 arguments..done is a callback function which reports back to passport(can call it anything) 
         //find a user and establish the identity
         User.findOne({email: email},function(err,user){//first email category from above ..schema: 2nd email is the user input
             if(err){
-                console.log('error in finding user --> passport');//if user not found showing error
+                req.flash('error',err.message);
+                // console.log('error in finding user --> passport');//if user not found showing error
                 return done(err);
             }
             if(!user || user.password != password){//if user or password doesnt match showing error
-                console.log('Invalid Username/Password');
+                // console.log('Invalid Username/Password');
+                req.flash('error','Invalid Username/Password')
                 return done(null, false);
             }
             return done(null, user);//else returning the user..done takes 2 arguments if not err returns null i.e no err
